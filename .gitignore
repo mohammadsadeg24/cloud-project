@@ -1,0 +1,46 @@
+# === Python ===
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+# *.sqlite3 
+# *.db
+# instance/
+# tasks.db
+
+# === Flask Configs ===
+*.log
+*.pid
+
+# === Node ===
+node_modules/
+npm-debug.log
+yarn-error.log
+.cache/
+
+# === VSCode / JetBrains ===
+.vscode/
+.idea/
+
+# === Docker ===
+*.tar
+*.bak
+*.tmp
+
+# === OS/Editor junk ===
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === Env variables ===
+.env
+.env.*
+
+# === Docker Compose override (if any) ===
+docker-compose.override.yml
+
+# === Frontend build artifacts (if ever added) ===
+dist/
+build/

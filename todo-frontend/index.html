@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Todo App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #ccc;
+    }
+    h1 { text-align: center; }
+    ul { list-style: none; padding: 0; }
+    li {
+      padding: 10px;
+      background: #fff;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      box-shadow: 0 0 5px #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    form {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 8px;
+      font-size: 16px;
+    }
+    button {
+      padding: 6px 12px;
+      font-size: 14px;
+      margin-left: 5px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .delete-btn {
+      background-color: #dc3545;
+      border: none;
+      color: white;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>My Todo List</h1>
+
+  <ul id="task-list"></ul>
+
+  <form id="task-form">
+    <input type="text" id="task-title" placeholder="New task..." required />
+    <button type="submit">Add</button>
+  </form>
+
+  <script>
+    const API_URL = "http://127.0.0.1:5000/tasks";
+
+    async function loadTasks() {
+      try {
+        const response = await fetch(API_URL);
+        const tasks = await response.json();
+        const list = document.getElementById("task-list");
+        list.innerHTML = "";
+        tasks.forEach(task => {
+          const li = document.createElement("li");
+          li.innerHTML = `
+            <span>${task.id}. ${task.title}</span>
+            <span>
+              <button class="delete-btn" onclick="deleteTask(${task.id})">Delete</button>
+            </span>
+          `;
+          list.appendChild(li);
+        });
+      } catch (err) {
+        console.error("Error:", err);
+      }
+    }
+
+    async function deleteTask(id) {
+      await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+      loadTasks();
+    }
+
+    document.getElementById("task-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const title = document.getElementById("task-title").value;
+      await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title })
+      });
+      document.getElementById("task-title").value = "";
+      loadTasks();
+    });
+
+    loadTasks();
+  </script>
+
+</body>
+</html>
